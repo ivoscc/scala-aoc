@@ -4,31 +4,22 @@ import to.ivo.aoc.Day
 
 object Day01 extends Day {
 
-  def part1(lines: List[String]): String = {
-    val out = lines.foldLeft((0, 0))((acc, line) => {
-      if (line.trim.nonEmpty) {
-        (acc._1 + line.toInt, acc._2)
-      } else {
-        val currentSum = acc._1
-        val currentMax = acc._2
-        (0, currentSum.max(currentMax))
-      }
-    })
-    out._1.max(out._2).toString
+  override def part1(lines: List[String]): String = {
+    val (maxSum, currentSum) = lines.foldLeft((0, 0)) {
+      case ((currentMax, currentSum), line) if line.trim.nonEmpty => (currentMax, currentSum + line.toInt)
+      case ((currentMax, currentSum), _)                          => (currentMax.max(currentSum), 0)
+    }
+    maxSum.max(currentSum).toString // 68929
   }
 
-  def part2(lines: List[String]): String = {
+  override def part2(lines: List[String]): String = {
     val allSums = lines
-      .foldLeft((0, List[Int]()))((acc, line) => {
-        if (line.trim.nonEmpty) {
-          (acc._1 + line.toInt, acc._2)
-        } else {
-          val currentSum = acc._1
-          (0, acc._2 :+ currentSum)
-        }
-      })
+      .foldLeft((0, List[Int]())) {
+        case ((currentSum, allSums), line) if line.trim.nonEmpty => (currentSum + line.toInt, allSums)
+        case ((currentSum, allSums), _)                          => (0, allSums :+ currentSum)
+      }
       ._2
-    allSums.sorted.takeRight(3).sum.toString
+    allSums.sorted.takeRight(3).sum.toString // 203203
   }
 
 }
