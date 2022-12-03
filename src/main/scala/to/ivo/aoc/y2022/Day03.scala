@@ -4,39 +4,35 @@ import to.ivo.aoc.Day
 
 object Day03 extends Day {
 
-  private def inBoth(s0: String, s1: String): Char =
-    s0.toSet.intersect(s1.toSet).head
-
-  private def inAll(s0: String, s1: String, s2: String): Char =
-    s0.toSet.intersect(s1.toSet).intersect(s2.toSet).head
-
-  private def scoreChar(c: Char): Int = if (c.isUpper) {
-    c - 38
-  } else {
-    c - 96
-  }
-
   override def part1(lines: List[String]): String = {
     lines
-      .foldLeft(0) { (sum, line) =>
+      .foldLeft(0) { (accumulatedScore, line) =>
         val (compartment0, compartment1) = line.splitAt(line.length / 2)
-        val commonItem = inBoth(compartment0, compartment1)
-        sum + scoreChar(commonItem)
+        val commonItem = getCommonItem(compartment0, compartment1)
+        accumulatedScore + getItemScore(commonItem)
       }
-      .toString
+      .toString // 8185
   }
 
   override def part2(lines: List[String]): String = {
     lines
       .grouped(3)
-      .foldLeft(0) {
-        case (sum, List(g0, g1, g2)) => {
-          val commonItem = inAll(g0, g1, g2)
-          sum + scoreChar(commonItem)
-        }
-        case _ => 0
+      .foldLeft(0) { (accumulatedScore, rucksacks) =>
+        val commonItem = getCommonItem(rucksacks: _*)
+        accumulatedScore + getItemScore(commonItem)
       }
-      .toString
+      .toString // 2817
   }
+
+  private def getCommonItem(strings: String*): Char =
+    strings
+      .map(_.toSet)
+      .foldLeft(Set[Char]()) {
+        case (commonItems, items) if commonItems.nonEmpty => commonItems & items
+        case (_, items)                                   => items
+      }
+      .head
+
+  private def getItemScore(item: Char): Int = if (item.isUpper) item - 38 else item - 96
 
 }
