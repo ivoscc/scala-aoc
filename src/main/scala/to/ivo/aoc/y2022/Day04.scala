@@ -6,10 +6,11 @@ object Day04 extends Day {
 
   override def part1(lines: List[String]): String = {
     lines
-      .map(line => line.split(",").flatMap(_.split("-")).map(_.toInt))
+      .map(parseInput)
       .filter {
         case Array(start0, end0, start1, end1) => {
-          (start0 <= start1 && end0 >= end1) || (start1 <= start0 && end1 >= end0)
+          (start0 <= start1 && end0 >= end1) ||
+          (start1 <= start0 && end1 >= end0)
         }
       }
       .length
@@ -18,7 +19,7 @@ object Day04 extends Day {
 
   override def part2(lines: List[String]): String = {
     lines
-      .map(line => line.split(",").flatMap(_.split("-")).map(_.toInt))
+      .map(parseInput)
       .filter {
         case Array(start0, end0, start1, end1) => {
           (start1 <= start0 && end1 >= start0) ||
@@ -29,4 +30,10 @@ object Day04 extends Day {
       .toString // 911
   }
 
+  private def parseInput(line: String): Array[Int] = {
+    line
+      .split(",")
+      .flatMap(_.split("-"))
+      .map(_.toInt)
+  }
 }
