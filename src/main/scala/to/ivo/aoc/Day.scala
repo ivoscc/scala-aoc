@@ -6,9 +6,9 @@ trait Day {
     (part1(inputLines), part2(inputLines))
   }
 
-  def part1(input: List[String]): String
+  def part1(lines: List[String]): String
 
-  def part2(input: List[String]): String
+  def part2(lines: List[String]): String
 
   private def lines(input: String) = input.split("\n").toList
 }
